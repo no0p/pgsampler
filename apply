@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Builds, installs, restarts postgres and tails the postgres log.  Build options are not optimized for debugging.
+#
+make CFLAGS="-g -O0 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -fPIC -pie -I/usr/include/mit-krb5 -DLINUX_OOM_SCORE_ADJ=0 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g"
+sudo make install
+sudo service postgresql restart
+echo 'done'
+tail -f /var/log/postgresql/postgresql-9.3-main.log
