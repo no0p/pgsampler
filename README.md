@@ -24,17 +24,22 @@ The sampler collects timestamped statistics for the following categories of info
 - IO Activity
 - pg_stat_statements
 
-#### Example CSV output (Default output mode)
+#### Analyzing CSV output (Default output mode)
 
-bgwriter_stats.csv
+Below is an example of a csv file created for bgwriter status.
 ```
 checkpoints_timed, checkpoints_req, checkpoint_write_time, checkpoint_sync_time, buffers_checkpoint, buffers_clean, maxwritten_clean, buffers_backend, buffers_backend_fsync, buffers_alloc, stats_reset, measured_at
 "71","0","3","0","0","0","0","0","0","9744","2014-07-24 22:56:02.16601-07","2014-07-29 01:31:01.900609-07"
 "71","0","3","0","0","0","0","0","0","9935","2014-07-24 22:56:02.16601-07","2014-07-29 01:31:33.339747-07"
-"71","0","3","0","0","0","0","0","0","10151","2014-07-24 22:56:02.16601-07","2014-07-29 01:31:34.422928-07"
 ....
 ```
 
+Tools are provided to load and analyze this data in a *results* database created through <a href="https://github.com/gregs1104/pgbench-tools">pgbench-tools</a>.  
+
+
+```
+psql -f tools/import.sql -d results
+```
 
 ## Installation
 
@@ -103,10 +108,6 @@ This contains the hostname to connect to and send data.  It only matters when th
 ## CSV Reference
 
 The csv files contain timeseries data for various metrics representing the state of a cluster.  A helper sql script is provided in /tools which will create tables and copy the csv data into the tables for analysis.
-
-```
-psql -f tools/import.sql
-```
 
 Below are column header descriptions and example data.
 
