@@ -36,6 +36,8 @@ int collect_and_send_metrics(int cycle) {
    */
   if (cycle == 0) {
 
+		elog(LOG, "Cycle...");
+
   	command = restart_gucs();
     appendStringInfoString(&commands, command);
     if (strcmp(output_mode, "csv") == 0) 
