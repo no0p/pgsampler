@@ -299,8 +299,10 @@ char* csvify(char *s) {
 		if (i > 6) {
 			if (*s == FIELD_DELIMIT_CHAR) {
 				appendStringInfoChar(&resultbuf, ',');
-			} else if (*s == REC_DELIMIT_CHAR) {
+		  } else if (*s == '\n') {
 				//noop
+			} else if (*s == REC_DELIMIT_CHAR) {
+				appendStringInfoChar(&resultbuf, '\n');
 			} else if (*s == '\r') {
 				//noop
 			} else {
