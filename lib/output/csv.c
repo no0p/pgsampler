@@ -1,7 +1,7 @@
 #include "pgsampler.h"
 
 /*
- * Write the data parameter to a file.
+ * Write the data to a file.
  *
 */
 
