@@ -35,46 +35,29 @@ char* exec_to_command(const char* command, char* q) {
   initStringInfo(&resultbuf);
   
   
-  if (strcmp(output_mode, "network") == 0) {
-    appendStringInfoString(&resultbuf, command);
-    appendStringInfoString(&resultbuf, ";"); //artisinal semicolon
-  }
+
+  appendStringInfoString(&resultbuf, command);
+  appendStringInfoString(&resultbuf, ";"); //artisinal semicolon
+
   
   if (coltuptable != NULL) {
     for(i = 0; i < processed; i++) {
       for(j = 1; j <= coltuptable->tupdesc->natts; j++) {
-    
-      	  if (strcmp(output_mode, "network") == 0) {
-      	    if (SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j) != NULL) {
-        	    appendStringInfoString(&resultbuf, SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j));
-        	  }
-    		    appendStringInfo(&resultbuf, FIELD_DELIMIT);
-    		  } else {
-    		    
-            if (SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j) != NULL) { 
-              appendStringInfo(&resultbuf, "\"");
-    		      appendStringInfoString(&resultbuf, SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j));
-       		    appendStringInfo(&resultbuf, "\"");
-    		    }
-
-    		    
-    		    if (j != coltuptable->tupdesc->natts) {
-    		      appendStringInfo(&resultbuf, ",");
-    		    }    
-    		  }
+  
+  	    if (SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j) != NULL) {
+    	    appendStringInfoString(&resultbuf, SPI_getvalue(coltuptable->vals[i], coltuptable->tupdesc, j));
+    	  }
+		    appendStringInfo(&resultbuf, FIELD_DELIMIT);
+  		  
       }
       
-      if (strcmp(output_mode, "network") == 0) {
-        appendStringInfo(&resultbuf,REC_DELIMIT);
-      } else {
-        appendStringInfo(&resultbuf,"\n");
-      }
+      appendStringInfo(&resultbuf,REC_DELIMIT);
+  
     }
   }
   
-  if (strcmp(output_mode, "network") == 0) {
-    appendStringInfo(&resultbuf, CDELIMIT);
-  }
+
+  appendStringInfo(&resultbuf, CDELIMIT);
   
   spi_conn_context = MemoryContextSwitchTo(pre_context);
   result = pstrdup(resultbuf.data);
@@ -304,6 +287,33 @@ int get_database_count(void) {
   return database_count;
 }
 
+char* csvify(char *s) {
+	char* result;
+	StringInfoData resultbuf;
+	int i = 0;
+	
+	initStringInfo(&resultbuf);
+ 
+	while (*s != '\0') {
+		// Skip command header
+		if (i > 6) {
+			if (*s == FIELD_DELIMIT_CHAR) {
+				appendStringInfoChar(&resultbuf, ',');
+			} else if (*s == REC_DELIMIT_CHAR) {
+				//noop
+			} else if (*s == '\r') {
+				//noop
+			} else {
+				appendStringInfoChar(&resultbuf, *s);
+			}
+		}
+		s++;
+		i++;
+	}
+	//elog(LOG, "%s", resultbuf.data);
+	result = pstrdup(resultbuf.data);
+	return result;
+}
 
 
 

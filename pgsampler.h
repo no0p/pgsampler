@@ -46,6 +46,8 @@
 #define CDELIMIT "\r\n"
 #define REC_DELIMIT ""
 #define FIELD_DELIMIT ""
+#define REC_DELIMIT_CHAR ''
+#define FIELD_DELIMIT_CHAR ''
 
 typedef struct pgsampler_shared_state
 {
@@ -63,6 +65,7 @@ void pgsampler_sighup(SIGNAL_ARGS);
 
 Datum pgsampler_launch(PG_FUNCTION_ARGS);
 Datum predict(PG_FUNCTION_ARGS);
+char* csvify(char *s); 
 
 /* GUC variables */
 char* target_db;

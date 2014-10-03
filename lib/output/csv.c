@@ -15,6 +15,8 @@ int write_to_csv(char* command, char* data) {
   appendStringInfoString(&buf, command);
   appendStringInfo(&buf, ".csv");
   
+  data = csvify(data);
+  
   f = fopen(buf.data, "a+");
   
   if (f == NULL) {
