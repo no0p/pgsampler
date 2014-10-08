@@ -52,7 +52,6 @@
 typedef struct pgsampler_shared_state
 {
 	char next_db[64];			/* Next Database to connect to. */
-	char valid_token[33];
 	int restart_cycle;
 } pgsampler_shared_state;
 

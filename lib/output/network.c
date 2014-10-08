@@ -114,8 +114,6 @@ int send_data(char *data) {
 	// elog(LOG, "written: %d", n); // print number of bytes written to socket
 	if (n < 0)
 		return NO_DATA_SENT;
-	
-	//elog(LOG, "%s", data);
 
 	// Read response
 	response_received = false;
@@ -125,7 +123,7 @@ int send_data(char *data) {
 		timeouts_elapsed++;
 		recvBuff[n] = 0;
 		
-		// elog(LOG, "received: %d", n); // print number of bytes received
+		//elog(LOG, "received: %d", n); // print number of bytes received
 		//elog(LOG, "N-1= %c", recvBuff[n -1]);
 		//elog(LOG, "N-2= %c", recvBuff[n -2]);
 		//elog(LOG, "N-3= %c", recvBuff[n -3]);

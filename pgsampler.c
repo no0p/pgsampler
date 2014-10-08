@@ -1,8 +1,5 @@
 #include "pgsampler.h"
 
-/*The default pgsampler token for this build*/
-char* default_token = "DEFAULT60f6c631b4b77a2414d85191b";
-
 /* Essential for shared libs! */
 PG_MODULE_MAGIC;
 PG_FUNCTION_INFO_V1(pgsampler_launch);
@@ -23,7 +20,7 @@ void pgsampler_main(Datum main_arg) {
   sockfd = 0; 
   restart_cycle = 0;
 	
-
+	
   pqsignal(SIGTERM, pgsampler_sigterm);
   pqsignal(SIGHUP, pgsampler_sighup);
   BackgroundWorkerUnblockSignals();
@@ -34,12 +31,8 @@ void pgsampler_main(Datum main_arg) {
 	LWLockRelease(AddinShmemInitLock); //TODO consider putting this later after setting db
 	if (found) {
 		if (pgsampler_state->next_db != NULL && strlen(pgsampler_state->next_db) > 0) {
-			target_db = pstrdup(pgsampler_state->next_db);//TODO consider whether make a set length char[] re memory leaks
+			target_db = pstrdup(pgsampler_state->next_db);
 		}
-		if (pgsampler_state->valid_token != NULL && strlen(pgsampler_state->valid_token) > 0) {
-		  token = pgsampler_state->valid_token;
-		}
-		
     restart_cycle = ++pgsampler_state->restart_cycle;
     if (restart_cycle > 32000) {
       pgsampler_state->restart_cycle = 0;
@@ -57,16 +50,14 @@ void pgsampler_main(Datum main_arg) {
 
   
   /* 
-   *  Ensure meta tables present, ensure network is sane
-   *  The token is always null unless this is a controlled restart.    
+   *  Ensure network is sane
    */
-  if (token == NULL) {
-	  res = ensure_valid_environment();
-	  if (res != 0) {
-		  elog(LOG, "Failed to find appropriate environment.  Shutting down pgsampler monitoring for Safety.");
-		  proc_exit(1);
-	  }
-	}
+  res = ensure_valid_environment();
+  if (res != 0) {
+	  elog(LOG, "Failed to find appropriate environment.  Shutting down pgsampler monitoring for Safety.");
+	  proc_exit(1);
+  }
+	
 	
 	/* Set database count to drive fast restarts */
 	pgsampler_database_count = get_database_count();
@@ -79,7 +70,7 @@ void pgsampler_main(Datum main_arg) {
 		
 		pgstat_report_activity(STATE_RUNNING, "idling in polling loop");
 
-    rc = WaitLatch(&MyProc->procLatch, WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH, 1000L); //TODO consider adding delay function which accounts for work done.
+    rc = WaitLatch(&MyProc->procLatch, WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH, 1000L);
     ResetLatch(&MyProc->procLatch);
     
     if (rc & WL_POSTMASTER_DEATH) {
@@ -133,6 +124,17 @@ void _PG_init(void) {
                               NULL,
                               &target_db,
                               "postgres",
+                              PGC_SIGHUP,
+                              0,
+                              NULL,
+                              NULL,
+                              NULL);
+                              
+  DefineCustomStringVariable("pgsampler.token",
+                              "Database to connect to first",
+                              NULL,
+                              &token,
+                              "",
                               PGC_SIGHUP,
                               0,
                               NULL,
