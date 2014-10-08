@@ -28,7 +28,7 @@ int collect_and_send_metrics(int cycle) {
   pgstat_report_activity(STATE_RUNNING, "Collecting metrics");
   
   initStringInfo(&commands);
-  elog(LOG, "Control Loop");
+  elog(LOG, "Control Loop: %s", GetConfigOption("pgsampler.token", true, true));
   /*
    * Populate first cycle command data.  These are executed on the first cycle
    *   of a restart.  The bgworker restars every N cycles, as listed at the bottom

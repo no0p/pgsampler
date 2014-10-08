@@ -10,7 +10,7 @@ char* handshake(void) {
   initStringInfo(&resultbuf);
   appendStringInfo(&resultbuf, "HNDSHK;");
   
-  appendStringInfoString(&resultbuf, token);
+  appendStringInfoString(&resultbuf, GetConfigOption("pgsampler.token", true, true));
   appendStringInfo(&resultbuf, FIELD_DELIMIT);
   appendStringInfoString(&resultbuf, PG_VERSION);
   

@@ -131,7 +131,7 @@ int ensure_valid_environment(void) {
    *    without restart.
    */
   pgstat_report_activity(STATE_RUNNING, "Ascertaining identity token.");
-  if (token == NULL || strcmp(token, "") == 0) {
+  if (GetConfigOption("pgsampler.token", true, true) == NULL || strcmp(GetConfigOption("pgsampler.token", true, true), "") == 0) {
   	/* Check for a token file */
   	elog(LOG, "Checking for token file");
   	initStringInfo(&token_filename);
@@ -143,9 +143,10 @@ int ensure_valid_environment(void) {
   		elog(LOG, "fgetting....");
   		if (fgets(token_line, 40, f) != NULL) {
 				elog(LOG, "read line token file: %s", token_line);
-				if (strlen(token) == 32) { // TODO Check valid.
+
+				if (strlen(token_line) == 32) { // TODO Check valid.
 					elog(LOG, "Copying token to guc variable");
-					strcpy(token, token_line);
+					SetConfigOption("pgsampler.token", token_line, PGC_POSTMASTER, PGC_S_GLOBAL);
 				}
 			}
 			elog(LOG, "closing token file");
@@ -154,7 +155,8 @@ int ensure_valid_environment(void) {
   	elog(LOG, "closed..");
   }
   
-  if (token == NULL || strcmp(token, "") == 0) {
+  elog(LOG, "Pre Generate: %s", GetConfigOption("pgsampler.token", true, true));
+  if (GetConfigOption("pgsampler.token", true, true) == NULL || strcmp(GetConfigOption("pgsampler.token", true, true), "") == 0) {
   	elog(LOG, "Generating token");
   	/* generate and save a token */
 	  pgstat_report_activity(STATE_RUNNING, "creating custom pgsampler token");
@@ -173,25 +175,25 @@ int ensure_valid_environment(void) {
 		ntup = SPI_processed;
 	
 		if (ntup > 0) {
-			elog(LOG, "Setting custom token");
-			// Custom token was present at startup.  Apply it.
+			elog(LOG, "Setting generated token to file data_dir/pgsampler.token");
 			coltuptable = SPI_tuptable;
 			token_result = SPI_getvalue(coltuptable->vals[0], coltuptable->tupdesc, 1);
-			//token = malloc(strlen(token_result) + 1); //TODO put in proper context, char[34] declaration maybe
-			strcpy(token, token_result);
+
+			SetConfigOption("pgsampler.token", token_result, PGC_POSTMASTER, PGC_S_GLOBAL);
 			
 			// Now write token to file for future reference
 			f = fopen(token_filename.data, "w");
 			if (f != NULL) {
-    		fprintf(f, "%s", token); 
+    		fprintf(f, "%s", token_result); 
     	}
     	fclose(f);
 		}
   }
   
-  elog(LOG, "Reality check");
+  elog(LOG, "Reality check: %s", GetConfigOption("pgsampler.token", true, true));
+  elog(LOG, "Reality check: %d", strlen(GetConfigOption("pgsampler.token", true, true)));
   /* The reality check, either a token has been identified or not. */
-  if(token == NULL || strlen(token) != 32) {
+  if(GetConfigOption("pgsampler.token", true, true) == NULL || strlen(GetConfigOption("pgsampler.token", true, true)) != 32) {
   	elog(FATAL, "No valid token.  Token must must be a 32 character string.");
   	SPI_finish();
 		PopActiveSnapshot();
@@ -200,7 +202,7 @@ int ensure_valid_environment(void) {
   }
 
   elog(LOG, "Pgsampler Initialized");
-  elog(LOG, "TOKEN: %s", token);
+  elog(LOG, "TOKEN: %s", GetConfigOption("pgsampler.token", true, true));
 	SPI_finish();
 	PopActiveSnapshot();
 	CommitTransactionCommand();
@@ -277,6 +279,9 @@ int set_next_db_target(void) {
   return 0;
 }
 
+/*
+ * Returns a count of the number of non-template databases from the catalog.
+ */
 int get_database_count(void) {
   int retval, processed;
 	StringInfoData buf;
@@ -310,32 +315,38 @@ int get_database_count(void) {
   return database_count;
 }
 
-char* csvify(char *s) {
+/*
+ * Takes a string representing a command string containing information to that
+ *   would be sent over a socket in network mode, and converts it to a comma
+ *   separated value string for writing to a csv file. *   
+ */
+char* csvify(char *command_string) {
 	char* result;
 	StringInfoData resultbuf;
 	int i = 0;
 	
 	initStringInfo(&resultbuf);
  
-	while (*s != '\0') {
+	while (*command_string != '\0') {
+
 		// Skip command header
 		if (i > 6) {
-			if (*s == FIELD_DELIMIT_CHAR) {
+			if (*command_string == FIELD_DELIMIT_CHAR) {
 				appendStringInfoChar(&resultbuf, ',');
-		  } else if (*s == '\n') {
+		  } else if (*command_string == '\n') {
 				//noop
-			} else if (*s == REC_DELIMIT_CHAR) {
+			} else if (*command_string == REC_DELIMIT_CHAR) {
 				appendStringInfoChar(&resultbuf, '\n');
-			} else if (*s == '\r') {
+			} else if (*command_string == '\r') {
 				//noop
 			} else {
-				appendStringInfoChar(&resultbuf, *s);
+				appendStringInfoChar(&resultbuf, *command_string);
 			}
 		}
-		s++;
+		command_string++;
 		i++;
 	}
-	//elog(LOG, "%s", resultbuf.data);
+
 	result = pstrdup(resultbuf.data);
 	return result;
 }

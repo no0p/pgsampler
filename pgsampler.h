@@ -85,8 +85,7 @@ int replication_seconds;
 
 
 /* Globals */
-char* token;
-char* default_token;
+char* pgsampler_token;
 
 /* 
  * restart_cycle & pgsampler_database_count

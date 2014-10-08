@@ -129,13 +129,13 @@ void _PG_init(void) {
                               NULL,
                               NULL,
                               NULL);
-                              
+                            
   DefineCustomStringVariable("pgsampler.token",
-                              "Database to connect to first",
+                              "token used to identify cluster to antenna",
                               NULL,
-                              &token,
+                              &pgsampler_token,
                               "",
-                              PGC_SIGHUP,
+                              PGC_USERSET,
                               0,
                               NULL,
                               NULL,
