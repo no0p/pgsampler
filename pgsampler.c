@@ -82,7 +82,7 @@ void pgsampler_main(Datum main_arg) {
     cycle++;
     if (cycle_db_seconds > 0) { // GUC controlling whether to disconnect and reconnect
       if (cycle > cycle_db_seconds || (restart_cycle < pgsampler_database_count) ) {
-      	elog(LOG, "Relational Systems restarting to connect to different database: normal exit.");
+      	elog(LOG, "pgsampler restarting to connect to different database: normal exit.");
       	proc_exit(0); // RESET so new database is connected to.
      	}
     }

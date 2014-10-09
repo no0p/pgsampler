@@ -26,7 +26,12 @@ char* exec_to_command(const char* command, char* q) {
   
   retval = SPI_execute(q, false, 0);
   if (retval != SPI_OK_SELECT) {
-    elog(FATAL, "Database SELECT execution failed");
+    elog(LOG, "Database SELECT execution failed");
+    SPI_finish();
+		PopActiveSnapshot();
+		CommitTransactionCommand();
+		result = pstrdup("");
+		return result;
   }  
   
   processed = SPI_processed;
