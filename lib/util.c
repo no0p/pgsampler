@@ -33,8 +33,6 @@ char* exec_to_command(const char* command, char* q) {
   coltuptable = SPI_tuptable;
   
   initStringInfo(&resultbuf);
-  
-  
 
   appendStringInfoString(&resultbuf, command);
   appendStringInfoString(&resultbuf, ";"); //artisinal semicolon
@@ -71,18 +69,13 @@ char* exec_to_command(const char* command, char* q) {
 
 /*
  *  Ensure that the environment is sane.  
- *    This involves checking the Postgresql version,
- *  	identifying a valid token, and establishing a connection
- *		to a receiver.
+ *    This involves checking the Postgresql version, and if in network mode
+ *      also establishing a connection to a receiver.
 */
 int ensure_valid_environment(void) {
   StringInfoData buf;
-  StringInfoData token_filename;
-  int     retval, ntup;
+  int     retval;
 	char* pgversion;
-	char* token_result;
-	FILE *f;
-	char token_line[40];
 	
   SPITupleTable *coltuptable;
  
@@ -117,92 +110,7 @@ int ensure_valid_environment(void) {
 		CommitTransactionCommand();
   	return 1;
 	}
-    
-  /* 
-   * Identify valid token
-   *
-   * Once the token variable is set, we're good.
-   *   It may already be set from a GUC. 
-   *   If it is not set, attempt to load the token from a token file.
-   *   If there is no token file, or there is no valid token in a file,
-   *   generate a token and store it in the file and set the token variable.
-   *
-   *	If this all fails, return a result which will result in process exit 
-   *    without restart.
-   */
-  pgstat_report_activity(STATE_RUNNING, "Ascertaining identity token.");
-  if (GetConfigOption("pgsampler.token", true, true) == NULL || strcmp(GetConfigOption("pgsampler.token", true, true), "") == 0) {
-  	/* Check for a token file */
-  	elog(LOG, "Checking for token file");
-  	initStringInfo(&token_filename);
-  	appendStringInfoString(&token_filename, GetConfigOption("data_directory", true, true));
-  	appendStringInfoString(&token_filename, "/pgsampler.token");
-  	elog(LOG, "opening file %s", token_filename.data);
-  	f = fopen(token_filename.data, "r");
-  	if (f != NULL) {
-  		elog(LOG, "fgetting....");
-  		if (fgets(token_line, 40, f) != NULL) {
-				elog(LOG, "read line token file: %s", token_line);
-
-				if (strlen(token_line) == 32) { // TODO Check valid.
-					elog(LOG, "Copying token to guc variable");
-					SetConfigOption("pgsampler.token", token_line, PGC_POSTMASTER, PGC_S_GLOBAL);
-				}
-			}
-			elog(LOG, "closing token file");
-			fclose(f);
-  	}
-  	elog(LOG, "closed..");
-  }
   
-  elog(LOG, "Pre Generate: %s", GetConfigOption("pgsampler.token", true, true));
-  if (GetConfigOption("pgsampler.token", true, true) == NULL || strcmp(GetConfigOption("pgsampler.token", true, true), "") == 0) {
-  	elog(LOG, "Generating token");
-  	/* generate and save a token */
-	  pgstat_report_activity(STATE_RUNNING, "creating custom pgsampler token");
-		resetStringInfo(&buf);
-		appendStringInfo(&buf, "select md5(now()::text);");
-	
-		retval = SPI_execute(buf.data, false, 0);  
-		if (retval != SPI_OK_SELECT) {
-			elog(FATAL, "Unable to generate a token %d", retval);
-			SPI_finish();
-			PopActiveSnapshot();
-			CommitTransactionCommand();
-			return 1;  
-		}
-	
-		ntup = SPI_processed;
-	
-		if (ntup > 0) {
-			elog(LOG, "Setting generated token to file data_dir/pgsampler.token");
-			coltuptable = SPI_tuptable;
-			token_result = SPI_getvalue(coltuptable->vals[0], coltuptable->tupdesc, 1);
-
-			SetConfigOption("pgsampler.token", token_result, PGC_POSTMASTER, PGC_S_GLOBAL);
-			
-			// Now write token to file for future reference
-			f = fopen(token_filename.data, "w");
-			if (f != NULL) {
-    		fprintf(f, "%s", token_result); 
-    	}
-    	fclose(f);
-		}
-  }
-  
-  elog(LOG, "Reality check: %s", GetConfigOption("pgsampler.token", true, true));
-  elog(LOG, "Reality check: %d", strlen(GetConfigOption("pgsampler.token", true, true)));
-  /* The reality check, either a token has been identified or not. */
-  if(GetConfigOption("pgsampler.token", true, true) == NULL || strlen(GetConfigOption("pgsampler.token", true, true)) != 32) {
-  	elog(FATAL, "No valid token.  Token must must be a 32 character string.");
-  	SPI_finish();
-		PopActiveSnapshot();
-		CommitTransactionCommand();
-  	return 1;
-  }
-
-  elog(LOG, "Pgsampler Initialized");
-  elog(LOG, "TOKEN: %s", GetConfigOption("pgsampler.token", true, true));
 	SPI_finish();
 	PopActiveSnapshot();
 	CommitTransactionCommand();
@@ -216,7 +124,8 @@ int ensure_valid_environment(void) {
 			elog(LOG, "Error : Failed to connect to antenna.pgsampler.io please check domain is available from host.");
 		}
 	}
-  
+	
+  elog(LOG, "Pgsampler Initialized");
   return 0;
 }
 

@@ -20,7 +20,6 @@ void pgsampler_main(Datum main_arg) {
   sockfd = 0; 
   restart_cycle = 0;
 	
-	
   pqsignal(SIGTERM, pgsampler_sigterm);
   pqsignal(SIGHUP, pgsampler_sighup);
   BackgroundWorkerUnblockSignals();
