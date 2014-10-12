@@ -4,7 +4,7 @@
  *	 The pgsampler.c file contains a loop triggered by a wait latch every N seconds between work.
  *	
  *		That loop calls the collect_and_send_metrics function which will execute the commands
- *		 to collect data to send to antenna.pgsampler.io.	Then of course, it sends the data.
+ *		 to collect data to send to an antenna.	Then of course, it sends the data.
  *
  *		Some key aspects to this process is a cycle counter parameter which is used to 
  *			limit how often certain commands are run.

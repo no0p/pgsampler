@@ -126,7 +126,7 @@ int ensure_valid_environment(void) {
   if (strcmp(output_mode, "network") == 0) {
 		retval = establish_connection();
 		if (retval == 2) {
-			elog(LOG, "Error : Failed to connect to antenna.pgsampler.io please check domain is available from host.");
+			elog(LOG, "Error : Failed to connect to antenna please check domain is available from host.");
 		}
 	}
 	
