@@ -8,6 +8,10 @@
 
 /* 
  * This function establishes a socket connection to the server and executes the handshake command.
+ *
+ * return code 1: unable to setup basics for socket communication
+ * return code 2: unable to establish connection
+ *   1 is used by ensure_valid_environment
 */
 int establish_connection(void) {
 	int conn_result;
@@ -30,7 +34,7 @@ int establish_connection(void) {
   /* Resolve pgsampler.io IP address*/
   if ((status = getaddrinfo(output_network_host, NULL, &hints, &res)) != 0) {
       elog(LOG, "getaddrinfo: %s\n", gai_strerror(status));
-      return 2;
+      return 1;
   }
 
   for(p = res;p != NULL; p = p->ai_next) {

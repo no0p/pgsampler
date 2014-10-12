@@ -52,7 +52,7 @@ void pgsampler_main(Datum main_arg) {
    *  Ensure network is sane
    */
   res = ensure_valid_environment();
-  if (res != 0) {
+  if (res == 1) {
 	  elog(LOG, "Failed to find appropriate environment.  Shutting down pgsampler monitoring for Safety.");
 	  proc_exit(1);
   }
