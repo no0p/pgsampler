@@ -44,31 +44,31 @@ int collect_and_send_metrics(int cycle) {
 		command = relation_info();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("relation_info", command);
+			write_to_csv("stat_class", command);
 		pfree(command);
 
 		command = database_list();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("database_list", command);
+			write_to_csv("databases", command);
 		pfree(command);
 		
 		command = column_info();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("column_info", command);
+			write_to_csv("columns", command);
 		pfree(command);
 
 		command = index_info();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("index_info", command);
+			write_to_csv("indexes", command);
 		pfree(command);
 
 		command = column_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("column_stats", command);
+			write_to_csv("stat_column", command);
 		pfree(command);
 
 		command = stat_statements();
@@ -80,7 +80,7 @@ int collect_and_send_metrics(int cycle) {
 		command = db_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("db_stats", command);
+			write_to_csv("stat_database", command);
 		pfree(command);
 
 	}
@@ -99,13 +99,13 @@ int collect_and_send_metrics(int cycle) {
 		command = system_info();	
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("system_info", command);
+			write_to_csv("stat_system", command);
 		pfree(command);
 
 		command = fs_info();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("filesystem_stats", command);
+			write_to_csv("stat_filesystem", command);
 		pfree(command);
 	}
 
@@ -114,7 +114,7 @@ int collect_and_send_metrics(int cycle) {
 		command = activity_stats(); 
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("activity_stats", command);
+			write_to_csv("stat_activity", command);
 		pfree(command);
 	}
 
@@ -122,7 +122,7 @@ int collect_and_send_metrics(int cycle) {
 		command = replication_stats(); 
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("replication_stats", command);
+			write_to_csv("stat_replication", command);
 		pfree(command);
 	}
 
@@ -131,7 +131,7 @@ int collect_and_send_metrics(int cycle) {
 		command = bgwriter_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("bgwriter_stats", command);
+			write_to_csv("stat_bgwriter", command);
 		pfree(command);
 	}
 	
@@ -148,31 +148,31 @@ int collect_and_send_metrics(int cycle) {
 		command = table_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("table_stats", command);
+			write_to_csv("stat_table", command);
 		pfree(command);
 		
 		command = index_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("index_stats", command);
+			write_to_csv("stat_index", command);
 		pfree(command);
 		
 		command = table_io_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("table_io_stats", command);
+			write_to_csv("statio_user_table", command);
 		pfree(command);
 
 		command = index_io_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("index_io_stats", command);
+			write_to_csv("statio_user_index", command);
 		pfree(command);
 
 		command = function_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("function_stats", command);
+			write_to_csv("stat_function", command);
 		pfree(command);
 	}
 
