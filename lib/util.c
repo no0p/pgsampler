@@ -130,6 +130,8 @@ int ensure_valid_environment(void) {
 		}
 	}
 	
+	//TODO verify logging directory is accessible when csv mode.
+	
   elog(LOG, "Pgsampler Initialized");
   return 0;
 }

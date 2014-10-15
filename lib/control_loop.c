@@ -162,13 +162,13 @@ int collect_and_send_metrics(int cycle) {
 		command = table_io_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("statio_user_table", command);
+			write_to_csv("statio_user_tables", command);
 		pfree(command);
 
 		command = index_io_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("statio_user_index", command);
+			write_to_csv("statio_user_indexes", command);
 		pfree(command);
 
 		command = function_stats();
