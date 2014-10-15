@@ -2,13 +2,11 @@
 
 Pgsampler is a background worker for collecting statistics about a Postgresql cluster's state and activity.
 
-Data is collected from sources such as the Postgresql statistics collector tables, catalog tables and views, as well as system CPU/memory information sources.
+The timeseries data can be logged to CSV files for later analysis, or shipped over a network connection to a <a href="https://github.com/no0p/pgantenna">receiving service</a> for monitoring and analysis.
 
-The timeseries data can be logged to CSV files for later analysis or shipped over a network connection to a <a href="https://github.com/no0p/pgantenna">receiving service</a> for monitoring and analysis.
+The <a href="http://no0p.github.io/pgsampler/">project home page</a> provides a demo high level introduction.
 
-The <a href="http://no0p.github.io/pgsampler/">project home page</a> provides a broader introduction.
-
-The <a href="https://github.com/no0p/pgsampler/wiki">project wiki</a> contains additional information for configuring pgsampler.
+The <a href="https://github.com/no0p/pgsampler/wiki">project wiki</a> contains more detailed documentation.
 
 ## Installation
 
