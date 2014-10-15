@@ -23,7 +23,13 @@ Finally, restart the postgresql server.
 
 ### Dependencies
 
-Ensure that the postgresql-9.3-dev or equivalent packages are installed to build.
+Ensure that the postgresql development packages are installed to build.
+
+For an ubuntu system the following will suffice:
+
+```
+sudo apt-get install postgresql-9.3-dev
+```
 
 ### Uninstalling
 
@@ -31,7 +37,7 @@ It's easy to effectively uninstall pgsampler for any reason. If any issues arise
 
 ## Safety Considerations
 
-Pgsampler does not write or update any tables -- it only reads data from the database.  It only receives a fixed a length acknowledgement for data sent over the network.
+Pgsampler does not write to or update any tables -- it only reads data from the database.  It only receives a fixed a length acknowledgement for data sent over the network.
 
-Still, it is a background worker with access to shared memory and the potential to run priviledged actions.  At this time it is only recommended for more casual clusters until additional development and testing are completed.
+Still, it is a background worker with access to shared memory and has access to all database data and fiels.  At this time it is only recommended for more casual clusters until additional development and testing are completed.
 
