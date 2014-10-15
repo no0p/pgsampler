@@ -71,12 +71,6 @@ int collect_and_send_metrics(int cycle) {
 			write_to_csv("stat_column", command);
 		pfree(command);
 
-		command = stat_statements();
-		appendStringInfoString(&commands, command);
-		if (strcmp(output_mode, "csv") == 0) 
-			write_to_csv("stat_statements", command);
-		pfree(command);
-
 		command = db_stats();
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
@@ -140,6 +134,14 @@ int collect_and_send_metrics(int cycle) {
 		appendStringInfoString(&commands, command);
 		if (strcmp(output_mode, "csv") == 0) 
 			write_to_csv("transient_gucs", command);
+		pfree(command);
+	}
+	
+	if (cycle % statements_seconds == 0) {
+		command = stat_statements();
+		appendStringInfoString(&commands, command);
+		if (strcmp(output_mode, "csv") == 0) 
+			write_to_csv("stat_statements", command);
 		pfree(command);
 	}
 

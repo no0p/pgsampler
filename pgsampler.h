@@ -82,7 +82,7 @@ int bgwriter_seconds;
 int guc_seconds;
 int activity_seconds;
 int replication_seconds;
-
+int statements_seconds;
 
 /* Globals */
 char* pgsampler_token;
