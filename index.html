@@ -98,7 +98,7 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-6">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Create a Historical Record</h2>
+                    <h1 class="section-heading">A Historical Record</h1>
                     <p class="lead">Pgsampler collects data about tables, indexes, statements, filesystems, memory, pg_stats, transactions, locks, functions and more.<br/><a href="https://github.com/no0p/pgsampler/wiki/Logging-Stats#data-files">Metrics documentation</a></p>
                 </div>
                 <div class="col-lg-7 col-lg-offset-1 col-sm-6">
@@ -106,18 +106,17 @@
                   <pre><code>
 pgantenna=# select measured_at, checkpoints_timed, checkpoints_req, buffers_checkpoint from stat_bgwriter order by measured_at asc limit 6;
 
- measured_at   | checkpoints_timed | checkpoints_req | buffers_checkpoint 
+ <b>measured_at</b>   | checkpoints_timed | checkpoints_req | buffers_checkpoint 
 ---------------+-------------------+-----------------+-------------------
- 22:39:45.3425 |                 0 |               0 |                 0
- 22:42:57.4796 |                 1 |               0 |                82
- 22:46:09.5859 |                 1 |               0 |                82
- 22:49:21.6735 |                 2 |               0 |               115
- 22:52:33.7706 |                 3 |               0 |               135
- 22:55:36.8682 |                 3 |               0 |               135
+ <b>22:39:45.3425</b> |                 0 |               0 |                 0
+ <b>22:42:57.4796</b> |                 1 |               0 |                82
+ <b>22:46:09.5859</b> |                 1 |               0 |                82
+ <b>22:49:21.6735</b> |                 2 |               0 |               115
+ <b>22:52:33.7706</b> |                 3 |               0 |               135
+ <b>22:55:36.8682</b> |                 3 |               0 |               135
 (6 rows)</code></pr>
                 </div>
             </div>
-
         </div>
         <!-- /.container -->
 
@@ -131,7 +130,7 @@ pgantenna=# select measured_at, checkpoints_timed, checkpoints_req, buffers_chec
             <div class="row">
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Log Metrics to CSV Files</h2>
+                    <h1 class="section-heading">Log Metrics to CSV</h1>
                     <p class="lead">Pgsampler is a background worker.  It starts and stops with your server, and can be configured to log a history of performance statistics in flat files for later analysis.</p>
                 </div>
                 <div class="col-lg-6 col-sm-pull-6 col-sm-6">
@@ -158,6 +157,7 @@ pgantenna=# select measured_at, checkpoints_timed, checkpoints_req, buffers_chec
                 <div class="col-lg-6 col-lg-offset-1 col-sm-6">
                     <img class="img-responsive" src="images/antenna.png" alt="">
                 </div>
+                
             </div>
 
         </div>
@@ -182,7 +182,7 @@ pgantenna=# select measured_at, checkpoints_timed, checkpoints_req, buffers_chec
                             <a href="https://github.com/no0p/pgsampler/blob/master/LICENSE">License</a>
                         </li>
                         <li>
-                            <a href="https://no0p.github.io/pgantenna">pgantenna</a>
+                            <a href="https://no0p.github.io/pgantenna">Pgantenna</a>
                         </li>
                     </ul>
                 </div>
