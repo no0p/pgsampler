@@ -32,28 +32,6 @@
 
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container">
-            
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="http://no0p.github.io/pgsampler">pgsampler</a>
-                    </li>
-                    <li>
-                      <a>|</a>
-                    </li>
-                    <li>
-                        <a href="http://no0p.github.io/pgantenna">pgantenna</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-
     <!-- Header -->
     <div class="intro-header">
 
@@ -90,38 +68,6 @@
     <!-- /.intro-header -->
 
     <!-- Page Content -->
-
-    <div class="content-section-a">
-
-        <div class="container">
-
-            <div class="row">
-                <div class="col-lg-4 col-sm-6">
-                    <div class="clearfix"></div>
-                    <h1 class="section-heading">A Historical Record</h1>
-                    <p class="lead">Pgsampler collects data about tables, indexes, statements, filesystems, memory, pg_stats, transactions, locks, functions and more.<br/><a href="https://github.com/no0p/pgsampler/wiki/Logging-Stats#data-files">Metrics documentation</a></p>
-                </div>
-                <div class="col-lg-7 col-lg-offset-1 col-sm-6">
-                  <br/>
-                  <pre><code>
-pgantenna=# select measured_at, checkpoints_timed, checkpoints_req, buffers_checkpoint from stat_bgwriter order by measured_at asc limit 6;
-
- <b>measured_at</b>   | checkpoints_timed | checkpoints_req | buffers_checkpoint 
----------------+-------------------+-----------------+-------------------
- <b>22:39:45.3425</b> |                 0 |               0 |                 0
- <b>22:42:57.4796</b> |                 1 |               0 |                82
- <b>22:46:09.5859</b> |                 1 |               0 |                82
- <b>22:49:21.6735</b> |                 2 |               0 |               115
- <b>22:52:33.7706</b> |                 3 |               0 |               135
- <b>22:55:36.8682</b> |                 3 |               0 |               135
-(6 rows)</code></pre>
-                </div>
-            </div>
-        </div>
-        <!-- /.container -->
-
-    </div>
-    <!-- /.content-section-a -->
 
     <div class="content-section-b">
 
