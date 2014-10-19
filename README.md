@@ -1,6 +1,6 @@
 ## Introduction
 
-Pgsampler is a background worker for collecting statistics about a Postgresql cluster's state and activity.
+Pgsampler is an experimental background worker for collecting statistics about a Postgresql cluster's state and activity.
 
 The <a href="http://no0p.github.io/pgsampler/">project home page</a> provides a demo and high level introduction. 
 
